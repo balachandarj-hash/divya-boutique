@@ -28,6 +28,7 @@ export default function Footer() {
             <p>
               <a href="tel:+919688563463">+91 96885 63463</a> · hello@divyaboutique.in
             </p>
+            <p>Monday to Sunday · 10:00 am – 10:30 pm</p>
           </div>
           <div>
             <h4>Shop</h4>
