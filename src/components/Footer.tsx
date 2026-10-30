@@ -26,7 +26,8 @@ export default function Footer() {
             </p>
             <p>Kallagam, Trichy District, Tamil Nadu, India – 621 653</p>
             <p>
-              <a href="tel:+919688563463">+91 96885 63463</a> · hello@divyaboutique.in
+              <a href="tel:+919688563463">+91 96885 63463</a> ·{' '}
+              <a href="mailto:divyasellam2003@gmail.com">divyasellam2003@gmail.com</a>
             </p>
             <p>Monday to Sunday · 10:00 am – 10:30 pm</p>
           </div>

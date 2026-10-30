@@ -69,7 +69,9 @@ export default function Contact() {
         <div className="card">
           <h2 style={{ fontFamily: 'var(--sans)', fontSize: 18 }}>Atelier</h2>
           <p className="meta-line">Kallagam, Trichy District, Tamil Nadu, India – 621 653</p>
-          <p className="meta-line">hello@divyaboutique.in</p>
+          <p className="meta-line">
+            <a href="mailto:divyasellam2003@gmail.com">divyasellam2003@gmail.com</a>
+          </p>
           <p className="meta-line">
             <a href="tel:+919688563463">+91 96885 63463</a>
           </p>
