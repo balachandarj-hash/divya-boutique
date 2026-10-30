@@ -2,7 +2,7 @@
 
 A production-style boutique shop for Indian ethnic and western women’s and kids wear. Prices in INR.
 
-**Live:** https://balachandarj-hash.github.io/anisha-boutique/
+**Live:** https://balachandarj-hash.github.io/divya-boutique/
 
 ## Stack
 
