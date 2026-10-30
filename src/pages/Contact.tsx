@@ -1,7 +1,6 @@
 import { FormEvent, useState } from 'react'
 import { useStore } from '../context/Store'
-
-const ENQUIRY_WHATSAPP = '919688563463'
+import { openStoreWhatsApp } from '../lib/whatsapp'
 
 export default function Contact() {
   const { notify } = useStore()
@@ -14,20 +13,17 @@ export default function Contact() {
     const email = String(data.get('email') || '').trim()
     const phone = String(data.get('phone') || '').trim()
     const message = String(data.get('message') || '').trim()
-    const body = [
-      'Divya Boutique enquiry',
-      `Name: ${name}`,
-      `Email: ${email}`,
-      phone ? `Phone: ${phone}` : null,
-      '',
-      message,
-    ]
-      .filter((line) => line !== null)
-      .join('\n')
-    window.open(
-      `https://wa.me/${ENQUIRY_WHATSAPP}?text=${encodeURIComponent(body)}`,
-      '_blank',
-      'noopener,noreferrer',
+    openStoreWhatsApp(
+      [
+        'Divya Boutique enquiry',
+        `Name: ${name}`,
+        `Email: ${email}`,
+        phone ? `Phone: ${phone}` : null,
+        '',
+        message,
+      ]
+        .filter((line) => line !== null)
+        .join('\n'),
     )
     setSent(true)
     notify('Opening WhatsApp — send to complete your enquiry')

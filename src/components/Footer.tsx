@@ -2,16 +2,26 @@ import { FormEvent, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Logo from './Logo'
 import { useStore } from '../context/Store'
+import { openStoreWhatsApp } from '../lib/whatsapp'
 
 export default function Footer() {
   const { notify } = useStore()
-  const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
 
   function onSubmit(e: FormEvent) {
     e.preventDefault()
-    if (!email.trim()) return
-    notify('You are on the list for new drops')
-    setEmail('')
+    const number = phone.trim()
+    if (!number) return
+    openStoreWhatsApp(
+      [
+        'Divya Boutique — 10% offer',
+        `Customer WhatsApp number: ${number}`,
+        '',
+        'This customer shared their contact number for the 10% off first-order offer.',
+      ].join('\n'),
+    )
+    notify('Opening WhatsApp — send to complete the 10% offer enquiry')
+    setPhone('')
   }
 
   return (
@@ -48,16 +58,17 @@ export default function Footer() {
             <Link to="/wishlist">Wishlist</Link>
           </div>
           <div>
-            <h4>Newsletter</h4>
-            <p>New weaves, drop dates and 10% off your first order.</p>
+            <h4>10% offer</h4>
+            <p>Share your WhatsApp number and get 10% off your first order.</p>
             <form className="newsletter" onSubmit={onSubmit}>
               <input
-                type="email"
+                type="tel"
+                inputMode="tel"
                 required
-                placeholder="Email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                aria-label="Email address"
+                placeholder="WhatsApp number"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                aria-label="WhatsApp number"
               />
               <button className="btn btn-rose" type="submit">
                 Join
