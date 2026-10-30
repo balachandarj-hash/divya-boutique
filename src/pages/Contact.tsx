@@ -40,7 +40,7 @@ export default function Contact() {
         </form>
         <div className="card">
           <h2 style={{ fontFamily: 'var(--sans)', fontSize: 18 }}>Atelier</h2>
-          <p className="meta-line">14, North Usman Road, T. Nagar, Chennai 600017</p>
+          <p className="meta-line">Kallagam, Trichy District, Tamil Nadu, India – 621 653</p>
           <p className="meta-line">hello@divyaboutique.in</p>
           <p className="meta-line">+91 44 4000 1288</p>
           <p className="meta-line">Tue–Sun · 11:00 am – 8:00 pm</p>

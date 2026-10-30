@@ -6,7 +6,7 @@ export default function About() {
       <div className="page-hero">
         <div className="wrap">
           <h1>About Divya Boutique</h1>
-          <p>A Chennai house of ethnic and western wear for women and kids.</p>
+          <p>A Trichy house of ethnic and western wear for women and kids.</p>
         </div>
       </div>
       <div className="wrap about-grid">
@@ -22,7 +22,7 @@ export default function About() {
           <h2>The house</h2>
           <p style={{ margin: '14px 0', color: 'var(--muted)' }}>
             Divya Boutique began as a trunk of silks passed between sisters. Today we design and
-            curate sarees, kurtis, western dresses and kids ethnic wear from T. Nagar, Chennai —
+            curate sarees, kurtis, western dresses and kids ethnic wear from Kallagam, Trichy District —
             small batches, honest fabrics, prices in rupees you can plan around.
           </p>
           <p style={{ margin: '14px 0', color: 'var(--muted)' }}>
