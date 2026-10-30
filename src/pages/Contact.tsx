@@ -1,14 +1,36 @@
 import { FormEvent, useState } from 'react'
 import { useStore } from '../context/Store'
 
+const ENQUIRY_WHATSAPP = '919688563463'
+
 export default function Contact() {
   const { notify } = useStore()
   const [sent, setSent] = useState(false)
 
-  function onSubmit(e: FormEvent) {
+  function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    const data = new FormData(e.currentTarget)
+    const name = String(data.get('name') || '').trim()
+    const email = String(data.get('email') || '').trim()
+    const phone = String(data.get('phone') || '').trim()
+    const message = String(data.get('message') || '').trim()
+    const body = [
+      'Divya Boutique enquiry',
+      `Name: ${name}`,
+      `Email: ${email}`,
+      phone ? `Phone: ${phone}` : null,
+      '',
+      message,
+    ]
+      .filter((line) => line !== null)
+      .join('\n')
+    window.open(
+      `https://wa.me/${ENQUIRY_WHATSAPP}?text=${encodeURIComponent(body)}`,
+      '_blank',
+      'noopener,noreferrer',
+    )
     setSent(true)
-    notify('Message received — we will write back soon')
+    notify('Opening WhatsApp — send to complete your enquiry')
   }
 
   return (
@@ -16,7 +38,7 @@ export default function Contact() {
       <div className="page-hero">
         <div className="wrap">
           <h1>Contact</h1>
-          <p>Visit the atelier or send a note. We reply within one working day.</p>
+          <p>Fill the form and your enquiry goes to +91 96885 63463 on WhatsApp.</p>
         </div>
       </div>
       <div className="wrap contact-grid">
@@ -30,13 +52,19 @@ export default function Contact() {
             <input id="cemail" name="email" type="email" required />
           </div>
           <div className="field">
+            <label htmlFor="cphone">Phone</label>
+            <input id="cphone" name="phone" type="tel" inputMode="tel" placeholder="10-digit mobile" required />
+          </div>
+          <div className="field">
             <label htmlFor="cmsg">Message</label>
             <textarea id="cmsg" name="message" rows={5} required />
           </div>
           <button type="submit" className="btn btn-rose">
-            Send message
+            Send enquiry on WhatsApp
           </button>
-          {sent ? <p className="meta-line">Thank you. We have your note.</p> : null}
+          {sent ? (
+            <p className="meta-line">WhatsApp opened with your message. Tap Send so we receive it on 96885 63463.</p>
+          ) : null}
         </form>
         <div className="card">
           <h2 style={{ fontFamily: 'var(--sans)', fontSize: 18 }}>Atelier</h2>
