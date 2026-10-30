@@ -1,7 +1,8 @@
 import { FormEvent, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
-import { useStore } from '../context/Store'
+import { productFor, useStore } from '../context/Store'
 import { inr } from '../lib/asset'
+import { openStoreWhatsApp } from '../lib/whatsapp'
 
 const STATES = [
   'Tamil Nadu',
@@ -42,12 +43,47 @@ export default function Checkout() {
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
     const data = new FormData(e.currentTarget)
+    const name = String(data.get('name') || '').trim()
+    const email = String(data.get('email') || '').trim()
+    const phone = String(data.get('phone') || '').trim()
+    const address = String(data.get('address') || '').trim()
+    const city = String(data.get('city') || '').trim()
+    const state = String(data.get('state') || '').trim()
+    const pin = String(data.get('pin') || '').trim()
     const order = placeOrder({
-      name: String(data.get('name') || ''),
-      city: String(data.get('city') || ''),
+      name,
+      city,
       payment,
       total,
     })
+    const items = order.lines
+      .map((line) => {
+        const product = productFor(line.productId)
+        if (!product) return null
+        return `• ${product.name} × ${line.qty} (${line.color}, ${line.size}) — ${inr(product.price * line.qty)}`
+      })
+      .filter((line): line is string => Boolean(line))
+    openStoreWhatsApp(
+      [
+        'Divya Boutique — ORDER CONFIRMATION',
+        `Order ID: ${order.id}`,
+        'Status: Order placed. Please confirm and arrange delivery.',
+        '',
+        `Name: ${name}`,
+        `Phone: ${phone}`,
+        `Email: ${email}`,
+        `Address: ${address}`,
+        `${city}, ${state} — ${pin}`,
+        '',
+        'Items:',
+        ...items,
+        '',
+        `Payment: ${payment.toUpperCase()}`,
+        `Total: ${inr(total)}`,
+        '',
+        'Please WhatsApp the customer to confirm this order and delivery.',
+      ].join('\n'),
+    )
     navigate(`/order/${order.id}`, { state: order })
   }
 
@@ -103,7 +139,7 @@ export default function Checkout() {
               {label}
             </label>
           ))}
-          <p className="meta-line">This is a demo boutique. No payment is processed.</p>
+          <p className="meta-line">Place order opens WhatsApp to +91 96885 63463 with a confirmation to send.</p>
         </div>
         <aside className="summary">
           <h2 style={{ fontFamily: 'var(--sans)', fontSize: 18 }}>Pay {inr(total)}</h2>
