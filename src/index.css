@@ -106,9 +106,14 @@ p {
 }
 
 .logo-mark {
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   flex: none;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center 22%;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1.5px #c45b74;
 }
 
 .logo-name {
