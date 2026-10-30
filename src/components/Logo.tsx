@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 
 export default function Logo() {
   return (
-    <Link to="/" className="logo" aria-label="Anisha Boutique home">
+    <Link to="/" className="logo" aria-label="Divya Boutique home">
       <svg className="logo-mark" viewBox="0 0 48 48" fill="none" aria-hidden="true">
         <path
           d="M24 6c2.4 8 8.4 14 16.4 16.4C32.4 24.8 26.4 30.8 24 38.8 21.6 30.8 15.6 24.8 7.6 22.4 15.6 20 21.6 14 24 6Z"
@@ -16,7 +16,7 @@ export default function Logo() {
         />
       </svg>
       <span>
-        <span className="logo-name">Anisha</span>
+        <span className="logo-name">Divya</span>
         <span className="logo-sub">BOUTIQUE</span>
       </span>
     </Link>

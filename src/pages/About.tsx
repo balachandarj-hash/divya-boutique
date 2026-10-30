@@ -5,13 +5,13 @@ export default function About() {
     <>
       <div className="page-hero">
         <div className="wrap">
-          <h1>About Anisha Boutique</h1>
+          <h1>About Divya Boutique</h1>
           <p>A Chennai house of ethnic and western wear for women and kids.</p>
         </div>
       </div>
       <div className="wrap about-grid">
         <div>
-          <img src={asset('images/about-store.jpg')} alt="Anisha Boutique store" style={{ borderRadius: 18 }} />
+          <img src={asset('images/about-store.jpg')} alt="Divya Boutique store" style={{ borderRadius: 18 }} />
           <img
             src={asset('images/atelier.jpg')}
             alt="Racks in the atelier"
@@ -21,7 +21,7 @@ export default function About() {
         <div>
           <h2>The house</h2>
           <p style={{ margin: '14px 0', color: 'var(--muted)' }}>
-            Anisha Boutique began as a trunk of silks passed between sisters. Today we design and
+            Divya Boutique began as a trunk of silks passed between sisters. Today we design and
             curate sarees, kurtis, western dresses and kids ethnic wear from T. Nagar, Chennai —
             small batches, honest fabrics, prices in rupees you can plan around.
           </p>

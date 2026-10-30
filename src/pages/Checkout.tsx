@@ -25,7 +25,7 @@ export default function Checkout() {
 
   const shipping = cartSubtotal >= 999 || cartSubtotal === 0 ? 0 : 79
   const discount =
-    promo === 'ANISHA10' ? Math.round(cartSubtotal * 0.1) : promo === 'FESTIVE15' ? Math.round(cartSubtotal * 0.15) : 0
+    promo === 'DIVYA10' ? Math.round(cartSubtotal * 0.1) : promo === 'FESTIVE15' ? Math.round(cartSubtotal * 0.15) : 0
   const total = Math.max(0, cartSubtotal - discount + shipping)
 
   if (cart.length === 0) {

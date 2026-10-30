@@ -8,12 +8,12 @@ export default function Cart() {
   const [code, setCode] = useState('')
   const [applied, setApplied] = useState('')
   const shipping = cartSubtotal >= 999 || cartSubtotal === 0 ? 0 : 79
-  const discount = applied === 'ANISHA10' ? Math.round(cartSubtotal * 0.1) : applied === 'FESTIVE15' ? Math.round(cartSubtotal * 0.15) : 0
+  const discount = applied === 'DIVYA10' ? Math.round(cartSubtotal * 0.1) : applied === 'FESTIVE15' ? Math.round(cartSubtotal * 0.15) : 0
   const total = Math.max(0, cartSubtotal - discount + shipping)
 
   function applyPromo() {
     const next = code.trim().toUpperCase()
-    if (next === 'ANISHA10' || next === 'FESTIVE15') setApplied(next)
+    if (next === 'DIVYA10' || next === 'FESTIVE15') setApplied(next)
     else setApplied('invalid')
   }
 
@@ -89,8 +89,8 @@ export default function Cart() {
               Apply
             </button>
           </div>
-          {applied === 'invalid' ? <p className="meta-line">Code not recognised. Try ANISHA10.</p> : null}
-          {applied === 'ANISHA10' || applied === 'FESTIVE15' ? (
+          {applied === 'invalid' ? <p className="meta-line">Code not recognised. Try DIVYA10.</p> : null}
+          {applied === 'DIVYA10' || applied === 'FESTIVE15' ? (
             <p className="meta-line">Code {applied} applied.</p>
           ) : null}
           <div className="row">

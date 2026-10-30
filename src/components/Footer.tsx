@@ -24,7 +24,7 @@ export default function Footer() {
               Indian ethnic and western wear for women and kids — crafted in small batches, shipped
               across India.
             </p>
-            <p>T. Nagar, Chennai · hello@anishaboutique.in</p>
+            <p>T. Nagar, Chennai · hello@divyaboutique.in</p>
           </div>
           <div>
             <h4>Shop</h4>
@@ -61,7 +61,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="legal">
-          <span>© {new Date().getFullYear()} Anisha Boutique. All rights reserved.</span>
+          <span>© {new Date().getFullYear()} Divya Boutique. All rights reserved.</span>
           <span>Prices in INR · Free shipping on orders ₹999+ · Easy 7-day returns</span>
         </div>
       </div>

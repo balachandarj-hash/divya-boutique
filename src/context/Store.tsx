@@ -9,10 +9,10 @@ import {
 } from 'react'
 import { PRODUCTS, type Product } from '../data/catalog'
 
-const CART_KEY = 'anisha-cart'
-const WISH_KEY = 'anisha-wish'
-const USER_KEY = 'anisha-user'
-const ORDERS_KEY = 'anisha-orders'
+const CART_KEY = 'divya-cart'
+const WISH_KEY = 'divya-wish'
+const USER_KEY = 'divya-user'
+const ORDERS_KEY = 'divya-orders'
 
 export interface CartLine {
   productId: string
