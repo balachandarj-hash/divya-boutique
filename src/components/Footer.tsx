@@ -24,7 +24,10 @@ export default function Footer() {
               Indian ethnic and western wear for women and kids — crafted in small batches, shipped
               across India.
             </p>
-            <p>Kallagam, Trichy District, Tamil Nadu, India – 621 653 · hello@divyaboutique.in</p>
+            <p>Kallagam, Trichy District, Tamil Nadu, India – 621 653</p>
+            <p>
+              <a href="tel:+919688563463">+91 96885 63463</a> · hello@divyaboutique.in
+            </p>
           </div>
           <div>
             <h4>Shop</h4>
