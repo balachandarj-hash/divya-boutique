@@ -73,7 +73,7 @@ export default function Contact() {
           <p className="meta-line">
             <a href="tel:+919688563463">+91 96885 63463</a>
           </p>
-          <p className="meta-line">Tue–Sun · 11:00 am – 8:00 pm</p>
+          <p className="meta-line">Monday to Sunday · 10:00 am – 10:30 pm</p>
           <p className="meta-line">
             WhatsApp:{' '}
             <a href="https://wa.me/919688563463" target="_blank" rel="noreferrer">
