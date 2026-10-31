@@ -42,10 +42,10 @@ export default function Home() {
   const slide = SLIDES[i]
   const arrivals = [
     'ab-saree-purple-gold',
+    'ab-half-saree-pink',
+    'ab-half-saree-black',
     'ab-kurta-emerald',
     'ab-kurta-blush',
-    'ab-kurta-violet',
-    'ab-kurta-black',
   ]
     .map((id) => PRODUCTS.find((p) => p.id === id))
     .filter((p): p is (typeof PRODUCTS)[number] => Boolean(p))
