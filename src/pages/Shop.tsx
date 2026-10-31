@@ -35,7 +35,10 @@ export default function Shop() {
     if (q.trim()) {
       const needle = q.toLowerCase()
       list = list.filter((p) =>
-        [p.name, p.description, p.category, ...p.tags, ...p.colors].join(' ').toLowerCase().includes(needle),
+        [p.name, p.description, p.category, ...(p.details ?? []), ...p.tags, ...p.colors]
+          .join(' ')
+          .toLowerCase()
+          .includes(needle),
       )
     }
     const band = PRICE_BANDS.find((b) => b.id === price) ?? PRICE_BANDS[0]

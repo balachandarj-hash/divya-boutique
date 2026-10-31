@@ -19,6 +19,7 @@ export interface Product {
   fabric: string
   care: string
   description: string
+  details?: string[]
   images: string[]
   tags: string[]
   isNew?: boolean
@@ -102,6 +103,31 @@ const SAREE = ['Free Size']
 const KIDS = ['2–3Y', '4–5Y', '6–7Y', '8–9Y', '10–12Y']
 
 export const PRODUCTS: Product[] = [
+  {
+    id: 'ab-saree-purple-gold',
+    slug: 'purple-gold-embroidered-sequinned-saree',
+    name: 'Purple Gold Embroidered Sequinned Saree',
+    category: 'sarees',
+    price: 800,
+    colors: ['Purple', 'Gold'],
+    sizes: SAREE,
+    fabric: 'Embroidered fabric with sequinned border',
+    care: 'Dry clean recommended. Keep sequins and embroidery away from snags.',
+    description:
+      'A purple and gold toned saree with an embroidered border and embellished sequinned detail. Comes with an unstitched blouse piece — ready to stitch to fit.',
+    details: [
+      'Purple & gold toned saree',
+      'Embroidered saree with border',
+      'Has embellished sequinned detail',
+      'The saree comes with an unstitched blouse piece',
+    ],
+    images: ['images/p-purple-gold-saree.jpg'],
+    tags: ['embroidered', 'sequin', 'border', 'blouse-piece', 'party'],
+    isNew: true,
+    collections: ['festive', 'wedding'],
+    rating: 4.8,
+    reviews: 12,
+  },
   {
     id: 'ab-saree-kanjee',
     slug: 'kanjeevaram-magenta-gold-saree',
@@ -535,7 +561,10 @@ export function searchProducts(query: string): Product[] {
   const q = query.trim().toLowerCase()
   if (!q) return PRODUCTS
   return PRODUCTS.filter((p) =>
-    [p.name, p.category, p.fabric, p.description, ...p.tags, ...p.colors].join(' ').toLowerCase().includes(q),
+    [p.name, p.category, p.fabric, p.description, ...(p.details ?? []), ...p.tags, ...p.colors]
+      .join(' ')
+      .toLowerCase()
+      .includes(q),
   )
 }
 

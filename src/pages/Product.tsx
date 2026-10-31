@@ -68,6 +68,13 @@ export default function Product() {
             {product.compareAt ? <span className="compare">{inr(product.compareAt)}</span> : null}
           </p>
           <p className="lead">{product.description}</p>
+          {product.details?.length ? (
+            <ul className="pdp-details">
+              {product.details.map((line) => (
+                <li key={line}>{line}</li>
+              ))}
+            </ul>
+          ) : null}
           <div>
             Colour
             <div className="swatches">

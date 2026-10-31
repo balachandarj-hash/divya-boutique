@@ -41,11 +41,11 @@ export default function Home() {
   const [i, setI] = useState(0)
   const slide = SLIDES[i]
   const arrivals = [
+    'ab-saree-purple-gold',
     'ab-kurta-emerald',
     'ab-kurta-blush',
     'ab-kurta-violet',
     'ab-kurta-black',
-    'ab-kurta-blue',
   ]
     .map((id) => PRODUCTS.find((p) => p.id === id))
     .filter((p): p is (typeof PRODUCTS)[number] => Boolean(p))

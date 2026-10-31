@@ -840,6 +840,33 @@ p {
   margin: 16px 0 22px;
 }
 
+.pdp-details {
+  margin: 0 0 22px;
+  padding: 14px 18px;
+  list-style: none;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.pdp-details li {
+  position: relative;
+  padding: 6px 0 6px 18px;
+  color: var(--ink-2);
+  font-size: 14px;
+}
+
+.pdp-details li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 13px;
+  width: 7px;
+  height: 7px;
+  border-radius: 99px;
+  background: var(--rose);
+}
+
 .swatches,
 .sizes {
   display: flex;
