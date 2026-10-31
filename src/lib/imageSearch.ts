@@ -57,6 +57,144 @@ function hueDist(a: number, b: number): number {
   return Math.min(d, 360 - d)
 }
 
+function rgbDist(a: [number, number, number], b: [number, number, number]): number {
+  const dr = a[0] - b[0]
+  const dg = a[1] - b[1]
+  const db = a[2] - b[2]
+  return Math.sqrt(dr * dr + dg * dg + db * db)
+}
+
+function edgeBackground(data: Uint8ClampedArray, size: number): [number, number, number] | null {
+  let r = 0
+  let g = 0
+  let b = 0
+  let n = 0
+  const take = (x: number, y: number) => {
+    const i = (y * size + x) * 4
+    r += data[i]
+    g += data[i + 1]
+    b += data[i + 2]
+    n += 1
+  }
+  for (let i = 0; i < size; i += 2) {
+    take(i, 0)
+    take(i, size - 1)
+    take(0, i)
+    take(size - 1, i)
+  }
+  if (!n) return null
+  return [r / n, g / n, b / n]
+}
+
+function centerAverage(data: Uint8ClampedArray, size: number): [number, number, number] {
+  const lo = Math.floor(size * 0.3)
+  const hi = Math.ceil(size * 0.7)
+  let r = 0
+  let g = 0
+  let b = 0
+  let n = 0
+  for (let y = lo; y < hi; y++) {
+    for (let x = lo; x < hi; x++) {
+      const i = (y * size + x) * 4
+      r += data[i]
+      g += data[i + 1]
+      b += data[i + 2]
+      n += 1
+    }
+  }
+  return [r / n, g / n, b / n]
+}
+
+function isBackgroundPixel(
+  rgb: [number, number, number],
+  hsl: { h: number; s: number; l: number },
+  bg: [number, number, number] | null,
+): boolean {
+  if (!bg) return false
+  if (rgbDist(rgb, bg) < 78) return true
+  const bgHsl = rgbToHsl(bg[0], bg[1], bg[2])
+  if (bgHsl.s > 22 && hsl.s > 16 && hueDist(hsl.h, bgHsl.h) < 22) return true
+  return false
+}
+
+function bucketsFromPixels(
+  data: Uint8ClampedArray,
+  size: number,
+  bg: [number, number, number] | null,
+): Swatch[] {
+  const buckets = new Map<number, { n: number; s: number; l: number }>()
+  let kept = 0
+  for (let y = 0; y < size; y++) {
+    for (let x = 0; x < size; x++) {
+      const i = (y * size + x) * 4
+      const rgb: [number, number, number] = [data[i], data[i + 1], data[i + 2]]
+      const hsl = rgbToHsl(rgb[0], rgb[1], rgb[2])
+      if (isBackgroundPixel(rgb, hsl, bg)) continue
+      if (hsl.l > 94 || hsl.l < 5) continue
+      if (hsl.s < 10 && hsl.l > 78) continue
+      const dx = (x + 0.5) / size - 0.5
+      const dy = (y + 0.5) / size - 0.5
+      const center = Math.exp(-(dx * dx + dy * dy) * 7)
+      const satBoost = 0.35 + Math.min(hsl.s, 85) / 70
+      const w = center * satBoost
+      const key = Math.round(hsl.h / 12) * 12
+      const cur = buckets.get(key) ?? { n: 0, s: 0, l: 0 }
+      cur.n += w
+      cur.s += hsl.s * w
+      cur.l += hsl.l * w
+      buckets.set(key, cur)
+      kept += w
+    }
+  }
+  if (kept < 8) return []
+  const raw = [...buckets.entries()]
+    .map(([h, v]) => ({
+      h,
+      s: v.s / v.n,
+      l: v.l / v.n,
+      weight: v.n / kept,
+    }))
+    .sort((a, b) => b.weight - a.weight)
+  return refineSwatches(mergeHues(raw)).slice(0, 4)
+}
+
+function mergeHues(swatches: Swatch[]): Swatch[] {
+  const out: Swatch[] = []
+  for (const s of swatches) {
+    const near = out.find((x) => hueDist(x.h, s.h) <= 20)
+    if (!near) {
+      out.push({ ...s })
+      continue
+    }
+    const w = near.weight + s.weight
+    let h1 = near.h
+    let h2 = s.h
+    if (h2 - h1 > 180) h2 -= 360
+    if (h1 - h2 > 180) h1 -= 360
+    near.h = ((h1 * near.weight + h2 * s.weight) / w + 360) % 360
+    near.s = (near.s * near.weight + s.s * s.weight) / w
+    near.l = (near.l * near.weight + s.l * s.weight) / w
+    near.weight = w
+  }
+  return out.sort((a, b) => b.weight - a.weight)
+}
+
+function isSkin(s: Swatch): boolean {
+  return hueDist(s.h, 28) < 22 && s.s >= 16 && s.s <= 68 && s.l >= 28 && s.l <= 80
+}
+
+function refineSwatches(swatches: Swatch[]): Swatch[] {
+  const garmentW = swatches.filter((s) => !isSkin(s) && s.s > 20).reduce((n, s) => n + s.weight, 0)
+  const next =
+    garmentW >= 0.18
+      ? swatches.map((s) => (isSkin(s) ? { ...s, weight: s.weight * 0.22 } : s))
+      : swatches
+  const total = next.reduce((n, s) => n + s.weight, 0) || 1
+  return next
+    .map((s) => ({ ...s, weight: s.weight / total }))
+    .sort((a, b) => b.weight - a.weight)
+}
+
 export async function swatchesFromFile(file: Blob): Promise<Swatch[]> {
   const url = URL.createObjectURL(file)
   try {
@@ -68,7 +206,7 @@ export async function swatchesFromFile(file: Blob): Promise<Swatch[]> {
 
 export async function swatchesFromUrl(src: string): Promise<Swatch[]> {
   const img = await loadImage(src)
-  const size = 72
+  const size = 220
   const canvas = document.createElement('canvas')
   canvas.width = size
   canvas.height = size
@@ -76,31 +214,12 @@ export async function swatchesFromUrl(src: string): Promise<Swatch[]> {
   if (!ctx) return []
   ctx.drawImage(img, 0, 0, size, size)
   const { data } = ctx.getImageData(0, 0, size, size)
-  const buckets = new Map<number, { n: number; s: number; l: number }>()
-  for (let i = 0; i < data.length; i += 4) {
-    const r = data[i]
-    const g = data[i + 1]
-    const b = data[i + 2]
-    const { h, s, l } = rgbToHsl(r, g, b)
-    if (l > 92 || l < 8) continue
-    if (s < 8 && l > 75) continue
-    const key = Math.round(h / 15) * 15
-    const cur = buckets.get(key) ?? { n: 0, s: 0, l: 0 }
-    cur.n += 1
-    cur.s += s
-    cur.l += l
-    buckets.set(key, cur)
-  }
-  const total = [...buckets.values()].reduce((n, x) => n + x.n, 0) || 1
-  return [...buckets.entries()]
-    .map(([h, v]) => ({
-      h,
-      s: v.s / v.n,
-      l: v.l / v.n,
-      weight: v.n / total,
-    }))
-    .sort((a, b) => b.weight - a.weight)
-    .slice(0, 4)
+  const bg = edgeBackground(data, size)
+  const center = centerAverage(data, size)
+  const distinctBg = bg ? rgbDist(bg, center) > 36 : false
+  const subject = distinctBg ? bucketsFromPixels(data, size, bg) : []
+  if (subject.length) return subject
+  return bucketsFromPixels(data, size, null)
 }
 
 function loadImage(src: string): Promise<HTMLImageElement> {
@@ -128,12 +247,18 @@ function score(query: Swatch[], catalog: Swatch[]): number {
       const h = 1 - hueDist(q.h, c.h) / 180
       const s = 1 - Math.abs(q.s - c.s) / 100
       const l = 1 - Math.abs(q.l - c.l) / 100
-      const hit = h * 0.62 + s * 0.2 + l * 0.18
-      best = Math.max(best, hit * c.weight)
+      const hit = h * 0.74 + s * 0.13 + l * 0.13
+      best = Math.max(best, hit)
     }
     total += best * q.weight
   }
   return total
+}
+
+function hueBonus(query: Swatch[], catalog: Swatch[]): number {
+  const q = query[0]
+  if (!q || q.s < 18) return 0
+  return catalog.some((c) => hueDist(q.h, c.h) < 34 && c.s >= 14) ? 0.08 : 0
 }
 
 const photoCache = new Map<string, Promise<Swatch[]>>()
@@ -156,7 +281,9 @@ export async function findSimilarProducts(file: Blob, limit = 8): Promise<Produc
       const named = namedSwatches(product)
       const visual = score(query, photo)
       const namedScore = score(query, named)
-      return { product, n: visual * 0.72 + namedScore * 0.28 }
+      const bonus = hueBonus(query, photo) + hueBonus(query, named)
+      const twin = visual >= 0.93 ? 0.2 : 0
+      return { product, n: visual * 0.68 + namedScore * 0.18 + bonus + twin }
     }),
   )
   return scored
