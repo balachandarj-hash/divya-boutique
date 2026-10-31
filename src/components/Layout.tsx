@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import Header from './Header'
 import Footer from './Footer'
+import ImageSearch from './ImageSearch'
 import { useStore } from '../context/Store'
 
 export default function Layout() {
@@ -19,6 +20,7 @@ export default function Layout() {
         <Outlet />
       </main>
       <Footer />
+      <ImageSearch />
       <div className="toasts" aria-live="polite">
         {toasts.map((t) => (
           <div key={t.id} className="toast">
