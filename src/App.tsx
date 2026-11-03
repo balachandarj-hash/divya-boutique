@@ -1,5 +1,8 @@
+import { lazy, Suspense } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import Layout from './components/Layout'
+
+const AdminApp = lazy(() => import('./admin/AdminApp'))
 import Home from './pages/Home'
 import Shop from './pages/Shop'
 import Product from './pages/Product'
@@ -16,6 +19,14 @@ import NotFound from './pages/NotFound'
 export default function App() {
   return (
     <Routes>
+      <Route
+        path="admin/*"
+        element={
+          <Suspense fallback={<div style={{ padding: 32, fontFamily: 'Jost, sans-serif' }}>Loading admin…</div>}>
+            <AdminApp />
+          </Suspense>
+        }
+      />
       <Route element={<Layout />}>
         <Route index element={<Home />} />
         <Route path="shop" element={<Shop />} />

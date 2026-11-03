@@ -28,3 +28,5 @@ npm run preview
 ## Pages
 
 Home, Shop (with category and price filters), Product, Cart, Checkout, Collections, About, Contact, Wishlist, Account.
+
+Admin dashboard (mock data, separate layout): open `/admin` — for example `http://127.0.0.1:5173/admin` or `https://balachandarj-hash.github.io/divya-boutique/admin`. There is no Admin link in the shop header.

@@ -1,0 +1,36 @@
+/* Admin-only Tailwind. Preflight is omitted so the storefront CSS stays intact. */
+@layer theme, base, components, utilities;
+
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities);
+
+@source './**/*.{tsx,ts}';
+
+@theme {
+  --font-sans: 'Jost', 'Segoe UI', sans-serif;
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --color-ink: #2a1f1c;
+  --color-ink2: #4a3b36;
+  --color-muted: #8a7872;
+  --color-rose: #c45b74;
+  --color-rose-hover: #b14d66;
+  --color-rose-soft: #f3d5dc;
+  --color-cream: #fbf7f2;
+  --color-blush: #f7ece3;
+  --color-line: #eadfd6;
+  --color-gold: #a07850;
+}
+
+#admin-root {
+  font-family: var(--font-sans);
+  color: #2a1f1c;
+  background: #fbf7f2;
+  min-height: 100vh;
+}
+
+#admin-root h1,
+#admin-root h2,
+#admin-root h3 {
+  font-family: var(--font-serif);
+  font-weight: 500;
+}
