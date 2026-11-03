@@ -9,6 +9,8 @@ import {
   Ticket,
   BarChart3,
   Settings,
+  ShoppingCart,
+  Timer,
   X,
 } from 'lucide-react'
 import { asset } from '../../lib/asset'
@@ -18,6 +20,8 @@ const LINKS = [
   { to: '/admin/products', label: 'Products', icon: Package },
   { to: '/admin/categories', label: 'Categories', icon: Layers },
   { to: '/admin/orders', label: 'Orders', icon: ShoppingBag },
+  { to: '/admin/carts', label: 'Active Carts', icon: ShoppingCart },
+  { to: '/admin/abandoned-carts', label: 'Abandoned Carts', icon: Timer },
   { to: '/admin/inventory', label: 'Inventory', icon: Warehouse },
   { to: '/admin/customers', label: 'Customers', icon: Users },
   { to: '/admin/coupons', label: 'Coupons', icon: Ticket },
@@ -67,7 +71,7 @@ export default function Sidebar({ open, onClose }: { open: boolean; onClose: () 
             </NavLink>
           ))}
         </nav>
-        <p className="px-5 pb-5 text-[11px] text-white/40">Kallagam · mock data on this device</p>
+        <p className="px-5 pb-5 text-[11px] text-white/40">Kallagam · shop data on this device</p>
       </aside>
     </>
   )

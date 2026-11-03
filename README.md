@@ -29,4 +29,13 @@ npm run preview
 
 Home, Shop (with category and price filters), Product, Cart, Checkout, Collections, About, Contact, Wishlist, Account.
 
-Admin dashboard (mock data, separate layout): open `/admin` — for example `http://127.0.0.1:5173/admin` or `https://balachandarj-hash.github.io/divya-boutique/admin`. There is no Admin link in the shop header.
+Admin dashboard (separate layout): open `/admin`. Staff password is `DivyaAdmin` until changed in Settings. There is no Admin link in the shop header.
+
+GitHub Pages has no Node server, so the shop and admin share one browser store:
+
+- Session bag: `divya-cart` (unchanged)
+- Cart registry: `divya-shop-carts` (active / abandoned / converted)
+- Orders: `divya-orders` (checkout writes here; admin Orders and Dashboard read it)
+- Admin session: `sessionStorage` key `divya-admin-session` (owner role, 8 hours)
+
+Guests are stored as “Guest shopper” until they sign in on Account. Abandoned carts use the hours window in Settings (default 24). Placing an order marks that cart converted.

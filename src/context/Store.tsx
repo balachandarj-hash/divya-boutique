@@ -8,11 +8,11 @@ import {
   type ReactNode,
 } from 'react'
 import { PRODUCTS, type Product } from '../data/catalog'
+import { convertCart, linesToItems, saveShopOrder, upsertOpenCart, type ShopOrder } from '../lib/shopDb'
 
 const CART_KEY = 'divya-cart'
 const WISH_KEY = 'divya-wish'
 const USER_KEY = 'divya-user'
-const ORDERS_KEY = 'divya-orders'
 
 export interface CartLine {
   productId: string
@@ -56,7 +56,15 @@ interface StoreValue {
   isWished: (productId: string) => boolean
   signIn: (user: User) => void
   signOut: () => void
-  placeOrder: (info: { name: string; city: string; payment: string; total: number }) => Order
+  placeOrder: (info: {
+    name: string
+    email: string
+    phone: string
+    city: string
+    address: string
+    payment: string
+    total: number
+  }) => Order
   notify: (message: string) => void
 }
 
@@ -83,6 +91,17 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     if (user) localStorage.setItem(USER_KEY, JSON.stringify(user))
     else localStorage.removeItem(USER_KEY)
   }, [user])
+
+  const cartSubtotal = useMemo(() => {
+    return cart.reduce((sum, l) => {
+      const p = PRODUCTS.find((x) => x.id === l.productId)
+      return sum + (p ? p.price * l.qty : 0)
+    }, 0)
+  }, [cart])
+
+  useEffect(() => {
+    upsertOpenCart(cart, user, cartSubtotal)
+  }, [cart, user, cartSubtotal])
 
   const notify = useCallback((message: string) => {
     const id = Date.now() + Math.random()
@@ -145,9 +164,18 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   }, [notify])
 
   const placeOrder = useCallback(
-    (info: { name: string; city: string; payment: string; total: number }) => {
+    (info: {
+      name: string
+      email: string
+      phone: string
+      city: string
+      address: string
+      payment: string
+      total: number
+    }) => {
+      const items = linesToItems(cart)
       const order: Order = {
-        id: `AB${Date.now().toString().slice(-8)}`,
+        id: `DB-${Date.now().toString().slice(-8)}`,
         createdAt: new Date().toISOString(),
         lines: cart,
         total: info.total,
@@ -155,8 +183,18 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         city: info.city,
         payment: info.payment,
       }
-      const prev = readJson<Order[]>(ORDERS_KEY, [])
-      localStorage.setItem(ORDERS_KEY, JSON.stringify([order, ...prev]))
+      const cartId = convertCart(order.id)
+      const record: ShopOrder = {
+        ...order,
+        cartId,
+        customerName: info.name,
+        email: info.email,
+        phone: info.phone,
+        address: info.address,
+        status: 'pending',
+        items,
+      }
+      saveShopOrder(record)
       setCart([])
       return order
     },
@@ -164,12 +202,6 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   )
 
   const cartCount = useMemo(() => cart.reduce((n, l) => n + l.qty, 0), [cart])
-  const cartSubtotal = useMemo(() => {
-    return cart.reduce((sum, l) => {
-      const p = PRODUCTS.find((x) => x.id === l.productId)
-      return sum + (p ? p.price * l.qty : 0)
-    }, 0)
-  }, [cart])
 
   const value = useMemo(
     () => ({

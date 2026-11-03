@@ -52,7 +52,10 @@ export default function Checkout() {
     const pin = String(data.get('pin') || '').trim()
     const order = placeOrder({
       name,
+      email,
+      phone,
       city,
+      address,
       payment,
       total,
     })

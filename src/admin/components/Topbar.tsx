@@ -1,12 +1,15 @@
 import { FormEvent } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { Bell, ExternalLink, Menu, Search } from 'lucide-react'
+import { Bell, ExternalLink, LogOut, Menu, Search } from 'lucide-react'
+import { logoutAdmin } from '../auth'
 
 const TITLES: Record<string, string> = {
   '/admin': 'Dashboard',
   '/admin/products': 'Products',
   '/admin/categories': 'Categories',
   '/admin/orders': 'Orders',
+  '/admin/carts': 'Active Carts',
+  '/admin/abandoned-carts': 'Abandoned Carts',
   '/admin/inventory': 'Inventory',
   '/admin/customers': 'Customers',
   '/admin/coupons': 'Coupons',
@@ -57,6 +60,17 @@ export default function Topbar({ onMenu }: { onMenu: () => void }) {
       >
         View shop <ExternalLink size={13} />
       </Link>
+      <button
+        type="button"
+        className="grid h-10 w-10 place-items-center rounded-xl border border-line text-ink2"
+        aria-label="Sign out"
+        onClick={() => {
+          logoutAdmin()
+          navigate('/admin/login')
+        }}
+      >
+        <LogOut size={16} />
+      </button>
     </header>
   )
 }
