@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Link, useParams, useSearchParams } from 'react-router-dom'
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import {
   CATEGORIES,
   PRODUCTS,
@@ -19,6 +19,7 @@ const PRICE_BANDS = [
 export default function Shop() {
   const { category } = useParams()
   const [params] = useSearchParams()
+  const navigate = useNavigate()
   const q = params.get('q') ?? ''
   const onlyNew = params.get('new') === '1'
   const cat = (category as CategoryId | undefined) && CATEGORIES.some((c) => c.id === category)
@@ -74,13 +75,23 @@ export default function Shop() {
           <aside className="filters">
             <h3>Category</h3>
             <label>
-              <input type="radio" name="cat" checked={!cat && !onlyNew} readOnly />
-              <Link to="/shop">All</Link>
+              <input
+                type="radio"
+                name="cat"
+                checked={!cat && !onlyNew}
+                onChange={() => navigate('/shop')}
+              />
+              All
             </label>
             {CATEGORIES.map((c) => (
               <label key={c.id}>
-                <input type="radio" name="cat" checked={cat === c.id} readOnly />
-                <Link to={`/shop/${c.id}`}>{c.label}</Link>
+                <input
+                  type="radio"
+                  name="cat"
+                  checked={cat === c.id}
+                  onChange={() => navigate(`/shop/${c.id}`)}
+                />
+                {c.label}
               </label>
             ))}
             <h3>Price</h3>
